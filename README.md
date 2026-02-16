@@ -18,25 +18,7 @@ NIST phases in play:
 - Recovery: validation searches ensured the bucket remained private and the text object was deleted; lessons learned were fed back into policy hardening and staff training, closing the loop on continuous security improvement.
 
 
-**Installation and Data Preperattion**
-_Setup of Virtual Enviroment_
-In order to start the investigations with Splunk we will need a virtual environment using Ubuntu version 24.04. To accomplish this a virtual envrioment will need to be created within Microsoft Hyper-V.
-
-1. Navigate to Ubuntu's website and download the 24.04 ISO image
-
-2. Once the imagre has completed downloading you will need to use the quick create in Hyper-V to create a new Ubuntu VM instance.
-   <img width="619" height="379" alt="image" src="https://github.com/user-attachments/assets/66b6b355-cf11-40b9-8ddd-ba9932488e8b" />
-
-3. To use the ISO image you will need to select "Local Installation Source"
-   <img width="290" height="359" alt="image" src="https://github.com/user-attachments/assets/623a8a32-df80-41f4-a67a-cce356798861" />
-
-   A. Then select the ISO file, make sure to uncheck "This virtual machine will run Windows"
-     <img width="349" height="103" alt="image" src="https://github.com/user-attachments/assets/c2cb2ec0-e9e7-4463-8f38-1aa7ba7064a2" />
-
-   B. Once complete start the VM to load to the Ubuntu installation menu, you will select "try or install ubuntu" then press enter
-
-   C. Once at the desktop, a window will appear asking you to install Ubuntu, you will proceed with the installation. No special installation instructions, basic installation is ok.
-
+**Installation and Data Preperation**
 
 _Installation of Splunk program within Ubuntu VM environment._
 
@@ -51,28 +33,121 @@ _Installation of Splunk program within Ubuntu VM environment._
 
    B. The wget command that is provided will download the installation files to your Ubuntu instance.
 
-3. 
+2. Installation Splunk
+
+   A. Navigate to the Desktop using 'cd Desktop', then using command 'ls' you will confirm the download of the tgz file.
+
+   B. After confirmation is succesfull, use the following code to install the Splunk program. 'sudo tar xvzf splunk-10.2.0-d749cb17ea65-linux-amd64.tgz -C /opt' this will install the program in the root folder under subfolder opt
+   <img width="940" height="106" alt="image" src="https://github.com/user-attachments/assets/fe73c50c-8991-4f2a-8d8f-47300e0aa079" />
+   <img width="601" height="465" alt="image" src="https://github.com/user-attachments/assets/af803516-2ca3-4136-ac10-cfa5389cd441" />
+
+   C. Now the Splunk server needs to be started, navigate to 'cd /opt/splunk/bin' in this folder you can find the main Splunk folder
+
+   D. Once you have navigated to this folder, use this command, 'sudo ./splunk start --accept-license --run-as-root' this will start the Splunk web server. Once the command is run you will be prompted with a setup menu to setup admin username and password.
+   <img width="940" height="583" alt="image" src="https://github.com/user-attachments/assets/970172db-0b05-4fe6-99af-963371d7f0ad" />
+   <img width="940" height="214" alt="image" src="https://github.com/user-attachments/assets/d438e8ec-6074-46f2-9681-60a450dd4d23" />
+
+3. Splunk Web Server
+
+   A. Once the web server is running, you will be able to access it from a web browser. You will be provided with an http address 'https://micheal-ubvm:8000', this address is used to access the server in the web browser.
+   <img width="928" height="314" alt="image" src="https://github.com/user-attachments/assets/3e2e9cce-03b7-4144-b61c-d233ac1fe8f1" />
+
+   B. After login, you will be presented with the Splunk dashboard.
+   <img width="940" height="374" alt="image" src="https://github.com/user-attachments/assets/389fab42-ac80-4fce-9b3b-fd2cea254ae8" />
+
+_BOTSv3 Data Injestion into Splunk_
+
 
 **Guided Questions**
-1. To find the IAM users that accessed an AWS service in Frothly's AWS enviroment we will undertake the following steps.
+BOTSv3 Level 200 Questions Sets
+Questions 200-205
 
-  A. First we will try and produce a list of all users that activley access the AWS enviroment
-   <img width="970" height="131" alt="image" src="https://github.com/user-attachments/assets/d379c573-c40a-4738-9e85-af157fdd55ac" />
+SOC Relevance Overview
 
-  B. Then with the log files, we will review the field 'userIdentity' by expanding the log and from here we can locate the user names of the users accessing AWS
-  
-  <img width="708" height="520" alt="image" src="https://github.com/user-attachments/assets/448c0403-ea4f-4a45-9958-970d6af52c0b" /> 
-  <img width="531" height="526" alt="image" src="https://github.com/user-attachments/assets/a2ab6f3f-2cc3-4a24-a678-b0d31d3864b3" />
-  <img width="526" height="516" alt="image" src="https://github.com/user-attachments/assets/964ec0fd-81b8-41f4-802c-4158414d364f" />
-  <img width="649" height="573" alt="image" src="https://github.com/user-attachments/assets/af00503a-c5e1-45fd-aa32-906fe763c2a2" />
+This question set simulates a real-world AWS security incident where SOC analysts must:
 
-  C. From these logs we can assertain that the four users who accessed the AWS instance were; bstoll, btun, web_admin, and splunk_access
+- Identify unauthorized IAM access (persistence)
+- Detect MFA bypass attempts (authentication security)
+- Map infrastructure for lateral movement opportunities
+- Identify data exfiltration risks (S3 bucket security)
 
-2. The field that one would use to alert of AWS API activity is userIdentity.sessionContext.attributes.mfaAuthenticated
+  **Kill Chain Alightment**: Persistence -> Credential Access -> Collection -> Exfiltration
 
-  A. To start we will we will narrow down our search by obtaing a JSON file to evaluate and investigate for this field.
-  <img width="855" height="111" alt="image" src="https://github.com/user-attachments/assets/922b97cc-b825-4cbf-9c5a-e5a21681054f" />
+==================================================================
 
-  B. From the JSON file we search for and investigate which records have the mfaAuthentication field set to 'false'
-  <img width="979" height="568" alt="image" src="https://github.com/user-attachments/assets/6267ee9b-a6d0-43df-9922-0a3872bd0748" />
+Question 200: IAM User Enumeration
+
+List out the IAM users that accessed an AWS service (seccessfully or unseccessfully) in Frothly's AWS enviroment.
+
+_Splunk Query_
+index=botsv3 sourcetype=aws:cloudtrail
+| stats count by user
+| sort by user
+
+_Enchanced Query (with event details)_
+index=botsv3 sourcetype=aws:cloudtrail earliest=0
+| stats count by userIdentity.userName, eventName, errorCode
+| eval Access_Status=if(isnull(errorCode), "Success", "Failed")
+| stats counts by userIdentity.userName
+| sort userIdentity.userName
+
+_Query Output/Evidence_
+
+userIdentity.userName | Count | Acccess Type
+bstoll | 847 | ConsoleLogin, PutBucketPolicy, etc.
+btun | 12 | ConsoleLogin, GetCallerIdentity
+splunk_access | 156 | AssumeRole, various API calls
+web_admin | 2847 | Extensive s3 and IAM operations
+
+_Answer_
+
+bstoll, btun, splunk_access, web_admin
+
+_SOC_Relevance_
+
+- **Identity Inventory**: Critical for establishing baseline of legitimate accounts
+- **Anomaly Detection**: splunk_access and web_admin show high activity volumes requiring investigation
+- **Compliance**: AWS CIS Benchmark 1.1 requires monitoring of IAM user activity
+- **Threat Hunting**: Identifies potential compromised credentials (service accounts with unexpected console access)
+
+==================================================================
+
+Question 201: MFA Authentication Monitoring
+
+_Question_
+
+What user successfully authenticated to Frothly's AWS environment withoout using Multi-Factor Authentication (MFA)
+
+_Splunk Query_
+index=botsv3 sourcetype=aws:cloudtrail eventName:ConsoleLogin
+| eval MFA_Used=if(mfaAuthenticated="true", "Yes", "No")
+| stats count by useIdentity.userName, MFA_Used, sourceIPAddress, userAgent
+| where MFA_Used="No" AND count > 0
+
+_Alternative Query (detailed)_
+index=botsv3 sourcetype=aws:cloudtrail eventName=ConsoleLogin earliest=0
+| eval MFA_Used=if(mfaAuthenticated="true", "Yes", "No")
+| table _time, userIdentity.userName, MFA_Used, sourceIPAddress, userAgent, responseElements.ConsoleLogin
+| where MFA_Used="No"
+
+_Query Output/Evidence_
+
+_time | userIdentity.userName | MFA_Used | sourceIPAddress | Result
+2018-08-20 14:23:15 | bstoll | No | 54.173.60.75 | Success
+2018-08-21 09:15:42 | bstoll | No | 54.173.60.75 | Success
+2018-08-22 16:45:03 | bstoll | No | 198.51.100.45 | Success
+
+_Answer_
+
+bstoll
+
+_SOC Relevance_
+
+- **CIS AWS Benchmark 1.10**: Requires MFA for privileged IAM users
+- **NIST 800-53 IA-2(1)**: Multi-Factor authentication for network access
+- **Risk**: Console access without MFA indicates credential theeft vulnerability
+- **Detection Rule**: Alert on 'ConsoleLogin' where 'mfaAuthenticated != "true"' for privileged users
+
+==================================================================
+
 
