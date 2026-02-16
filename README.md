@@ -17,6 +17,32 @@ NIST phases in play:
 - Response: bucket ACL was reverted and access logs confirmed no exfiltration before containment.
 - Recovery: validation searches ensured the bucket remained private and the text object was deleted; lessons learned were fed back into policy hardening and staff training, closing the loop on continuous security improvement.
 
+
+**Installation and Data Preperattion**
+_Setup of Virtual Enviroment_
+In order to start the investigations with Splunk we will need a virtual environment using Ubuntu version 24.04. To accomplish this a virtual envrioment will need to be created within Microsoft Hyper-V.
+1. Navigate to Ubuntu's website and download the 24.04 ISO image
+2. Once the imagre has completed downloading you will need to use the quick create in Hyper-V to create a new Ubuntu VM instance.
+   <img width="619" height="379" alt="image" src="https://github.com/user-attachments/assets/66b6b355-cf11-40b9-8ddd-ba9932488e8b" />
+3. To use the ISO image you will need to select "Local Installation Source"
+   <img width="290" height="359" alt="image" src="https://github.com/user-attachments/assets/623a8a32-df80-41f4-a67a-cce356798861" />
+   a. Then select the ISO file, make sure to uncheck "This virtual machine will run Windows"
+     <img width="349" height="103" alt="image" src="https://github.com/user-attachments/assets/c2cb2ec0-e9e7-4463-8f38-1aa7ba7064a2" />
+   b. Once complete start the VM to load to the Ubuntu installation menu, you will select "try or install ubuntu" then press enter
+   c. Once at the desktop, a window will appear asking you to install Ubuntu, you will proceed with the installation. No special installation instructions, basic installation is ok.
+
+
+_Installation of Splunk program within Ubuntu VM environment._
+1. Installation starts with the downloading of the Splunk program, to install you will need to sign up for an account within the Splunk website
+   <img width="602" height="489" alt="image" src="https://github.com/user-attachments/assets/ef88f640-b995-4b25-9e9b-3acb716ca467" />
+   a. To use the web portal you will need to register an account with your school email address, once registered you will have access to the tgz or deb files for installation.
+   <img width="622" height="387" alt="image" src="https://github.com/user-attachments/assets/e0bc2f3f-49b1-403e-9873-ba6aaf9af89e" />
+<img width="525" height="403" alt="image" src="https://github.com/user-attachments/assets/b45e800e-f8b6-43e9-a842-37cc392d0cb0" />
+<img width="940" height="350" alt="image" src="https://github.com/user-attachments/assets/a6e86228-30c3-4103-85aa-c2d0dc6c2291" />
+<img width="549" height="338" alt="image" src="https://github.com/user-attachments/assets/00495420-9651-4cf4-92ea-039a177ccb63" />
+   b. The wget command that is provided will download the installation files to your Ubuntu instance.
+2. 
+
 **Guided Questions**
 1. To find the IAM users that accessed an AWS service in Frothly's AWS enviroment we will undertake the following steps.
 
