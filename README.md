@@ -132,10 +132,11 @@ index=botsv3 sourcetype=aws:cloudtrail eventName=ConsoleLogin earliest=0
 
 _Query Output/Evidence_
 
-_time | userIdentity.userName | MFA_Used | sourceIPAddress | Result
-2018-08-20 14:23:15 | bstoll | No | 54.173.60.75 | Success
-2018-08-21 09:15:42 | bstoll | No | 54.173.60.75 | Success
-2018-08-22 16:45:03 | bstoll | No | 198.51.100.45 | Success
+| _time | userIdentity.userName | MFA_Used | sourceIPAddress | Result |
+| --- | --- | --- | --- | --- |
+| 2018-08-20 14:23:15 | 'bstoll' | No | 54.173.60.75 | Success |
+| 2018-08-21 09:15:42 | 'bstoll' | No | 54.173.60.75 | Success |
+| 2018-08-22 16:45:03 | 'bstoll' | No | 198.51.100.45 | Success |
 
 _Answer_
 
