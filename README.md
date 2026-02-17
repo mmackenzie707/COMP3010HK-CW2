@@ -99,6 +99,12 @@ btun | 12 | ConsoleLogin, GetCallerIdentity
 splunk_access | 156 | AssumeRole, various API calls
 web_admin | 2847 | Extensive s3 and IAM operations
 
+| Feature | Status | Notes |
+|---------|:------:|-------|
+| **Login** | ✅ | Working |
+| *Signup* | 🚧 | In progress |
+| [Docs](link) | ❌ | Not started |
+
 _Answer_
 
 bstoll, btun, splunk_access, web_admin
