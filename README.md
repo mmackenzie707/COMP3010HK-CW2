@@ -99,11 +99,13 @@ btun | 12 | ConsoleLogin, GetCallerIdentity
 splunk_access | 156 | AssumeRole, various API calls
 web_admin | 2847 | Extensive s3 and IAM operations
 
-| Feature | Status | Notes |
+| userIdentity.userName | Count | Acccess Type |
 |---------|:------:|-------|
-| **Login** | ✅ | Working |
-| *Signup* | 🚧 | In progress |
-| [Docs](link) | ❌ | Not started |
+| bstoll | 847 | ConsoleLogin, PutBucketPolicy, etc. |
+| btun | 12 | ConsoleLogin, GetCallerIdentity |
+| splunk_access | 156 | AssumeRole, various API calls |
+| web_admin | 2847 | Extensive s3 and IAM operations |
+
 
 _Answer_
 
