@@ -272,33 +272,25 @@ Question 204: S3 Data Exfiltration
 
 _Question_
 
-What is the name of the text file that was successfully uploaded to the S# bucket?
+What is the name of the text file that was successfully uploaded to the S3 bucket?
 
 _Splunk Query_
-index=botsv3 sourcetype=aws:cloudtrail eventName=PutObject
-| search requestParameters.bucketName="frothly-web-assets"
-| table _time, userIdentity.userName, requestParameters.key, sourceIPAddress
-| sort _time
-
-_Alternative Query (with error analysis)_
-index=botsv3 sourcetype=aws:cloudtrail eventSource=s3.amazonaws.com 
-    (eventName=PutObject OR eventName=PutObjectAcl)
-| eval Success=if(isnull(errorCode), "Yes", "No")
-| search requestParameters.bucketName="frothly-web-assets" Success="Yes"
-| stats count by requestParameters.key, userIdentity.userName, _time
-| sort _time
+index=botsv3 sourcetype=aws:s3:accesslogs bucket_name=frothlywebcode *.txt
+| search operation="REST.PUT.OBJECT"
 
 _Query Output/Evidence_
 
-| _time | userIdentity.userName | requestParameters.key | sourceIPAddress |
-| --- | --- | --- | --- |
-| 2018-08-21 14:32:18 | bstoll | credentials.txt | 54.173.60.75 |
-| 2018-08-21 14:35:42 | bstoll | test_upload.html | 54.173.60.75 |
-| 2018-08-21 15:01:23 | bstoll | sensitive_data.txt | 54.173.60.75 |
+| _time | operation | request_parameters.key | http_status | source_ip | user_agent |
+| --- | --- | --- | --- | --- | --- |
+| 2018-08-20 13:02:44 | REST.PUT.OBJECT | OPEN_BUCKET_PLEASE_FIX.txt	 | 200 | 52.90.40.105 | 	aws-cli/1.15.80 Python/2.7.14 Linux/4.14.47-56.37.amzn1.x86_64 botocore/1.10.79 |
+
+<img width="888" height="122" alt="image" src="https://github.com/user-attachments/assets/0869421e-6a67-4646-bfaa-900fbfb98d74" />
 
 _Answer_
 
-credentials.txt
+OPEN_BUCKET_PLEASE_FIX.txt
+
+<img width="367" height="146" alt="image" src="https://github.com/user-attachments/assets/d2e86262-ed2c-40ef-a9ca-7e96747f7586" />
 
 _SOC Relevance_
 
@@ -316,8 +308,9 @@ _Question_
 What is the name of the SS3 bucket where the attacker tried to hide their tracks by deleting the bucket policy?
 
 _Splunk Query_
-index=botsv3 sourcetype=aws:cloudtrail eventName=DeleteBucketPolicy
-| table _time, userIdentity.userName, requestParameters.bucketName, sourceIPAddress, userAgent
+index=botsv3 sourcetype=aws:cloudtrail eventName=PutBucketAcl
+| table _time, userIdentity.userName, eventName, requestParameters.bucketName, sourceIPAddress
+| sort _time desc
 
 _Comprehensive Query (policy changes)_
 index=botsv3 sourcetype=aws:cloudtrail 
@@ -329,14 +322,18 @@ index=botsv3 sourcetype=aws:cloudtrail
 
 _Query Output/Evidence_
 
-| _time | userIdentity.userName | requestParameters.bucketName | Action | sourceIPAddress |
+| _time | userIdentity.userName | eventName | requestParameters.bucketName | sourceIPAddress |
 | --- | --- | --- | --- | --- |
-| 2018-08-22 09:15:33 | bstoll | frothly-web-assets | Policy Deleted | 54.173.60.75 |
-| 2018-08-22 09:16:45 | bstoll | frothly-web-assets | Policy Modified | 54.173.60.75 |
+| 2018-08-20 21:57:54 | bstoll | PutBucketAcl | frothlywebcode | 107.77.212.175 |
+| 2018-08-20 21:01:46 | bstoll | PutBucketAcl | frothlywebcode | 107.77.212.175 |
+
+<img width="1124" height="134" alt="image" src="https://github.com/user-attachments/assets/d3b3e56e-ebf2-4aa6-89ba-993283cf3f80" />
 
 _Answer_
 
-frothly-web-access
+frothlywebcode
+
+<img width="425" height="146" alt="image" src="https://github.com/user-attachments/assets/6d817d2b-f5ca-4273-8f10-458e49ff0d98" />
 
 _SOC Relevance_
 
