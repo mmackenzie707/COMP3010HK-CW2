@@ -44,7 +44,7 @@ Splunk Enterprise 10.2.0 was downloaded via wget and extracted to /opt/splunk us
 
 _BOTSv3 Ingestion_
 
-BOTSv3 was selected over alternatives (CICIDS2017, DNSPCAP) for its labeled, multi-stage APT29 telemetry aligned with MITRE ATT&CK. Direct installation to /opt/splunk/etc/apps/ preserved pre-built dashboards and field extractions critical for rapid threat hunting onboarding. In production, such data would arrive via Universal Forwarders with TLS encryption.
+BOTSv3 was selected over alternatives (CICIDS2017, DNSPCAP) for its labelled, multi-stage APT29 telemetry aligned with MITRE ATT&CK. Direct installation to /opt/splunk/etc/apps/ preserved pre-built dashboards and field extractions critical for rapid threat hunting onboarding. In production, such data would arrive via Universal Forwarders with TLS encryption.
 
 <img width="251" height="220" alt="image" src="https://github.com/user-attachments/assets/8004a944-756e-46db-b646-03f9c03e3ee6" />
 
