@@ -1,6 +1,6 @@
 **Introduction**
 
-This investigation examines APT29 emulation data from the BOTSv3 dataset within a Security Operations Center (SOC) training environment. The exercise simulates a multi-stage cyber attack aligned with MITRE ATT&CK framework techniques, providing hands-on experience in threat detection using Splunk SIEM. Scope encompasses initial access through data exfiltration phases, with analysis limited to labeled attack telemetry. Assumptions include: (1) single-instance Splunk deployment adequate for training volume (<100GB/day), (2) BOTSv3 TTPs represent realistic enterprise threats, and (3) investigation occurs post-compromise without real-time containment pressure. Objectives are threefold: demonstrate technical proficiency in SPL query development, apply SOC tier workflows to incident analysis, and evaluate detection gaps in prevention controls. This report documents infrastructure setup, analyzes specific attack techniques through guided investigation, and reflects on operational implications for tiered security operations.
+This investigation examines APT29 emulation data from the BOTSv3 dataset within a Security Operations Center (SOC) training environment. The exercise simulates a multi-stage cyber attack aligned with MITRE ATT&CK framework techniques, providing hands-on experience in threat detection using Splunk SIEM. Scope encompasses initial access through data exfiltration phases, with analysis limited to labelled attack telemetry. Assumptions include: (1) single-instance Splunk deployment adequate for training volume (<100GB/day), (2) BOTSv3 TTPs represent realistic enterprise threats, and (3) investigation occurs post-compromise without real-time containment pressure. Objectives are threefold: demonstrate technical proficiency in SPL query development, apply SOC tier workflows to incident analysis, and evaluate detection gaps in prevention controls. This report documents infrastructure setup, analyzes specific attack techniques through guided investigation, and reflects on operational implications for tiered security operations.
 
 **SOC Roles and Incident Handling Reflection**
 
@@ -14,7 +14,7 @@ Detection: Median dwell time in BOTSv3 spanned days before exfiltration—mirror
 
 **Response:** The exercise presented the "containment dilemma"—immediate isolation versus extended monitoring for intelligence. Tier 3 analysts must balance business continuity against evidence preservation, often coordinating with legal teams before acting.
 
-**Recovery:** Post-incident, SOCs implement credential resets (KRBTGT rotation), system rebuilding from gold images, and control enhancements (AppLocker deployment). BOTSv3's labeled data enabled safe practice of high-stakes decisions carrying career/legal consequences in production.
+**Recovery:** Post-incident, SOCs implement credential resets (KRBTGT rotation), system rebuilding from gold images, and control enhancements (AppLocker deployment). BOTSv3's labelled data enabled safe practice of high-stakes decisions carrying career/legal consequences in production.
 Critical Insight: Investigation initially focused on single-host forensics before expanding enterprise-wide. Mature SOCs employ "assume breach" mentality—scoping lateral movement immediately rather than treating alerts as isolated.
 
 
@@ -44,7 +44,7 @@ Splunk Enterprise 10.2.0 was downloaded via wget and extracted to /opt/splunk us
 
 _BOTSv3 Ingestion_
 
-BOTSv3 was selected over alternatives (CICIDS2017, DNSPCAP) for its labelled, multi-stage APT29 telemetry aligned with MITRE ATT&CK. Direct installation to /opt/splunk/etc/apps/ preserved pre-built dashboards and field extractions critical for rapid threat hunting onboarding. In production, such data would arrive via Universal Forwarders with TLS encryption.
+BOTSv3 was selected over alternatives (CICIDS2017, DNSPCAP) for its labelled, multi-stage APT29 telemetry aligned with MITRE ATT&CK. Direct installation to /opt/splunk/etc/apps/ preserved prebuilt dashboards and field extractions critical for rapid threat hunting onboarding. In production, such data would arrive via Universal Forwarders with TLS encryption.
 
 <img width="251" height="220" alt="image" src="https://github.com/user-attachments/assets/8004a944-756e-46db-b646-03f9c03e3ee6" />
 
@@ -84,29 +84,29 @@ This question set simulates a real-world AWS security incident where SOC analyst
 - Map infrastructure for lateral movement opportunities
 - Identify data exfiltration risks (S3 bucket security)
 
-  **Kill Chain Alightment**: Persistence -> Credential Access -> Collection -> Exfiltration
+  **Kill Chain Alignment**: Persistence -> Credential Access -> Collection -> Exfiltration
 
 ==================================================================
 
 Question 200: IAM User Enumeration
 
-List out the IAM users that accessed an AWS service (seccessfully or unseccessfully) in Frothly's AWS enviroment.
+List out the IAM users that accessed an AWS service (successfully or unsuccessfully) in Frothly's AWS environment.
 
 _Splunk Query_
 index=botsv3 sourcetype=aws:cloudtrail
 | stats count by user
 | sort by user
 
-_Enchanced Query (with event details)_
+_Enhanced Query (with event details)_
 index=botsv3 sourcetype=aws:cloudtrail earliest=0
 | stats count by userIdentity.userName, eventName, errorCode
 | eval Access_Status=if(isnull(errorCode), "Success", "Failed")
-| stats counts by userIdentity.userName
+| stats count by userIdentity.userName
 | sort userIdentity.userName
 
 _Query Output/Evidence_
 
-| userIdentity.userName | Count | Acccess Type |
+| userIdentity.userName | Count | Access Type |
 |---------|:------:|-------|
 | bstoll | 847 | ConsoleLogin, PutBucketPolicy, etc. |
 | btun | 12 | ConsoleLogin, GetCallerIdentity |
@@ -121,7 +121,7 @@ bstoll, btun, splunk_access, web_admin
 
 <img width="455" height="111" alt="image" src="https://github.com/user-attachments/assets/13214125-de2c-4ddb-a51b-bfd64db52ff7" />
 
-_SOC_Relevance_
+_SOC Relevance_
 
 - **Identity Inventory**: Critical for establishing baseline of legitimate accounts
 - **Anomaly Detection**: splunk_access and web_admin show high activity volumes requiring investigation
@@ -134,12 +134,12 @@ Question 201: MFA Authentication Monitoring
 
 _Question_
 
-What user successfully authenticated to Frothly's AWS environment withoout using Multi-Factor Authentication (MFA)
+What user successfully authenticated to Frothly's AWS environment without using Multi-Factor Authentication (MFA)
 
 _Splunk Query_
 index=botsv3 sourcetype=aws:cloudtrail eventName:ConsoleLogin
 | eval MFA_Used=if(mfaAuthenticated="true", "Yes", "No")
-| stats count by useIdentity.userName, MFA_Used, sourceIPAddress, userAgent
+| stats count by userIdentity.userName, MFA_Used, sourceIPAddress, userAgent
 | where MFA_Used="No" AND count > 0
 
 _Alternative Query (detailed)_
@@ -168,22 +168,22 @@ _SOC Relevance_
 
 - **CIS AWS Benchmark 1.10**: Requires MFA for privileged IAM users
 - **NIST 800-53 IA-2(1)**: Multi-Factor authentication for network access
-- **Risk**: Console access without MFA indicates credential theeft vulnerability
+- **Risk**: Console access without MFA indicates credential theft vulnerability
 - **Detection Rule**: Alert on 'ConsoleLogin' where 'mfaAuthenticated != "true"' for privileged users
 
 ==================================================================
 
-Question 202: Web Infrastructure Dsicovery
+Question 202: Web Infrastructure Discovery
 
-_Questions_
+_Question_
 
-What is the name if the web server that the attacker may have compromised?
+What is the name of the web server that the attacker may have compromised?
 
 _Investigation Logic_
-The attacker (bstoll) accessed EC2 instances and S3 buckets. We need to identify which web server was targeted for comprimise.
+The attacker (bstoll) accessed EC2 instances and S3 buckets. We need to identify which web server was targeted for compromise.
 
 Splunk Query
-index=bothunter sourcetype=aws:cloudtrail userIdentity.userName=bstoll
+index=botsv3 sourcetype=aws:cloudtrail userIdentity.userName=bstoll
 | search eventName="DescribeInstances" OR eventName="StartInstances" OR eventName="StopInstances"
 | stats count by requestParameters.instancesSet.items{}.instanceId, awsRegion, sourceIPAddress
 
@@ -214,8 +214,8 @@ web-server
 _SOC Relevance_
 
 - **Asset Discovery:** Critical for incident scope determination
-- **Lateral Movement:** Web servers often have database access or higher privilages
-- **MITER ATT&CK T1205:** Traffic Signalling - web servers as beachheads
+- **Lateral Movement:** Web servers often have database access or higher privileges
+- **MITRE ATT&CK T1205:** Traffic Signalling - web servers as beachheads
 - **Containment Priority:** Web servers typically internet-facing = high risk
 
 ==================================================================
@@ -263,7 +263,7 @@ _SOC Relevance_
 
 - **Data Loss Prevention:** S3 buckets often contain sensitive customer data
 - **MITRE ATT&CK T1530:** Data from Cloud Storage Object
-- **Complaince:** GDPR/CCPA violation if PII accessed
+- **Compliance:** GDPR/CCPA violation of PII accessed
 - **Forensics:** S3 access logs show data exfiltration scope
 
 ==================================================================
@@ -305,7 +305,7 @@ Question 205: S3 Bucket Policy Manipulation
 
 _Question_
 
-What is the name of the SS3 bucket where the attacker tried to hide their tracks by deleting the bucket policy?
+What is the name of the S3 bucket where the attacker tried to hide their tracks by deleting the bucket policy?
 
 _Splunk Query_
 index=botsv3 sourcetype=aws:cloudtrail eventName=PutBucketAcl
@@ -338,15 +338,15 @@ frothlywebcode
 _SOC Relevance_
 
 - **Anti-Forensics:** Deleting bucket policies removes access logging and public access restrictions
-- **MITRE ATT&CK T1565:** Data Maniplulation (hiding evidence)
+- **MITRE ATT&CK T1565:** Data Manipulation (hiding evidence)
 - **Compliance Impact:** S3 bucket policy deletion violates AWS Well-Architected Security Pillar
-- **Detection Gap:** Without bucket policies, CloudTrial may stop logging S# events for that bucket
+- **Detection Gap:** Without bucket policies, CloudTrail may stop logging S3 events for that bucket
 
 **Conclusion**
 
 This investigation demonstrated that effective SOC operations require cross-tier collaboration and behavioral analytics beyond signature-based detection. BOTSv3's APT29 emulation revealed critical gaps: prevention controls failed at initial access, detection required multi-telemetry correlation, and response demanded balancing containment against intelligence gathering. Key technical achievements included [specific query technique] and [specific insight].
 
-Strategic implications emphasize: (1) investment in Tier 2 threat hunting capabilities for APT detection, (2) implementation of "assume breach" scoping procedures, and (3) development of automated TTP-based alerting reducing reliance on tier escalation. Detection improvements should prioritize PowerShell obfuscation analytics and WMI persistence monitoring. Response enhancements require pre-authorized containment playbooks minimizing decision latency during active intrusions. The exercise validated that labeled attack datasets provide essential safe practice for high-stakes SOC decisions, directly transferable to operational threat hunting workflows.
+Strategic implications emphasize: (1) investment in Tier 2 threat hunting capabilities for APT detection, (2) implementation of "assume breach" scoping procedures, and (3) development of automated TTP-based alerting reducing reliance on tier escalation. Detection improvements should prioritize PowerShell obfuscation analytics and WMI persistence monitoring. Response enhancements require pre-authorized containment playbooks minimizing decision latency during active intrusions. The exercise validated that labelled attack datasets provide essential safe practice for high-stakes SOC decisions, directly transferable to operational threat hunting workflows.
 
 
 **Appendices**
