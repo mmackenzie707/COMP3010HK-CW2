@@ -106,12 +106,6 @@ index=botsv3 sourcetype=aws:cloudtrail earliest=0
 
 _Query Output/Evidence_
 
-userIdentity.userName | Count | Acccess Type
-bstoll | 847 | ConsoleLogin, PutBucketPolicy, etc.
-btun | 12 | ConsoleLogin, GetCallerIdentity
-splunk_access | 156 | AssumeRole, various API calls
-web_admin | 2847 | Extensive s3 and IAM operations
-
 | userIdentity.userName | Count | Acccess Type |
 |---------|:------:|-------|
 | bstoll | 847 | ConsoleLogin, PutBucketPolicy, etc. |
@@ -119,10 +113,13 @@ web_admin | 2847 | Extensive s3 and IAM operations
 | splunk_access | 156 | AssumeRole, various API calls |
 | web_admin | 2847 | Extensive s3 and IAM operations |
 
+<img width="1121" height="272" alt="image" src="https://github.com/user-attachments/assets/0394905d-a7ee-44a0-af74-41e1e3a0f214" />
 
 _Answer_
 
 bstoll, btun, splunk_access, web_admin
+
+<img width="455" height="111" alt="image" src="https://github.com/user-attachments/assets/13214125-de2c-4ddb-a51b-bfd64db52ff7" />
 
 _SOC_Relevance_
 
@@ -159,9 +156,13 @@ _Query Output/Evidence_
 | 2018-08-21 09:15:42 | 'bstoll' | No | 54.173.60.75 | Success |
 | 2018-08-22 16:45:03 | 'bstoll' | No | 198.51.100.45 | Success |
 
+<img width="1114" height="220" alt="image" src="https://github.com/user-attachments/assets/815aaaaa-4eab-4a62-a35e-4be9bffa5c74" />
+
 _Answer_
 
 bstoll
+
+<img width="611" height="116" alt="image" src="https://github.com/user-attachments/assets/29bf0646-6e37-4ec9-a03d-b87a4a352678" />
 
 _SOC Relevance_
 
@@ -192,7 +193,7 @@ index=botsv3 sourcetype=stream:http OR sourcetype=aws:cloudtrail
 | stats count by dest_host, dest_ip, uri
 | sort - count
 
-Query Output/Evidence
+_Query Output/Evidence_
 
 From CloudTrail events tied to bstoll:
 - **Instance ID:** i-0f194c8c4e5b5c0e1
@@ -203,8 +204,12 @@ From VPC Flow Logs
 dest_ip=10.0.1.15 dest_port=80 src_ip=54.173.60.75
 dest_host=web-server.frothly.internal
 
+<img width="1124" height="245" alt="image" src="https://github.com/user-attachments/assets/ab48c49b-3cf1-4140-a995-60931bc15f2b" />
+
 _Answer_
 web-server
+
+<img width="445" height="119" alt="image" src="https://github.com/user-attachments/assets/bfbb9a0c-3b76-4b60-9b7a-d8a9c790e41e" />
 
 _SOC Relevance_
 
@@ -246,9 +251,13 @@ _Query Output/Evidence_
 | frothly-backups | Enumeration | web_admin | 156 |
 | frothly-logs | Data Upload | splunk_access | 89 |
 
+<img width="1114" height="231" alt="image" src="https://github.com/user-attachments/assets/5afdeab6-4636-4ee1-839b-02394c8d9f8c" />
+
 _Answer_
 
-frothly-web-access
+frothly-web-assets
+
+<img width="356" height="109" alt="image" src="https://github.com/user-attachments/assets/5514bd1a-4ded-4aaa-92ac-5f94a7e8b039" />
 
 _SOC Relevance_
 
