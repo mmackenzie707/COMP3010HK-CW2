@@ -348,9 +348,33 @@ This investigation demonstrated that effective SOC operations require cross-tier
 
 Strategic implications emphasize: (1) investment in Tier 2 threat hunting capabilities for APT detection, (2) implementation of "assume breach" scoping procedures, and (3) development of automated TTP-based alerting reducing reliance on tier escalation. Detection improvements should prioritize PowerShell obfuscation analytics and WMI persistence monitoring. Response enhancements require pre-authorized containment playbooks minimizing decision latency during active intrusions. The exercise validated that labeled attack datasets provide essential safe practice for high-stakes SOC decisions, directly transferable to operational threat hunting workflows.
 
-**References**
+
+**Appendices**
+
+_References_
 
 Splunk. (2024). Splunk Enterprise Installation Manual (Version 10.2.0).
 MITRE. (2024). ATT&CK Framework v14. https://attack.mitre.org
 SANS. (2023). SOC Tiers and Incident Handling. SANS Reading Room.
 Splunk. (2024). BOSS of the SOC v3 Dataset Documentation.
+
+_Generative AI Declaration_
+
+I acknowledge that generative artificial intelligence was used in the preparation of this report.
+
+Tool Used: KIMI K2.5
+
+Purpose of Use:
+Research and synthesis of publicly available BOTSv3 documentation, walkthroughs, and community solutions
+
+Verification of technical answers against multiple authoritative sources
+Structuring of incident timelines, Splunk query logic, and SOC relevance frameworks
+Explanation of discrepancies between query outputs and verified solutions
+
+Human Oversight:
+
+All AI-generated content was reviewed, validated, and verified by the analyst. Technical details, MITRE ATT&CK mappings, indicators of compromise (IOCs), and investigative conclusions were independently cross-referenced with primary sources and the official BOTSv3 dataset.
+
+Limitations:
+
+Generative AI tools may not reflect the most current dataset configurations or environment-specific nuances. All Splunk queries and results should be independently verified within the target environment.
